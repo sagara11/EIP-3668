@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity 0.8.9;
 
 // Import this file to use console.log
 import "hardhat/console.sol";
@@ -14,41 +14,38 @@ error OffchainLookup(
 );
 
 contract MyContract {
-    uint256 public unlockTime;
+    uint256 public myData;
     address payable public owner;
+    string[] urls = ["http://localhost:3000/getdata"];
 
     event Withdrawal(uint256 amount, uint256 when);
 
-    function getData(bytes calldata data) external view returns (bytes memory) {
-        revert OffchainLookup(
-            address(this),
-            urls,
-            callData,
-            Oracle.aCallback.selector,
-            abi.encode(address(target), callbackFunction, extraData)
-        );
+    function getData(bytes calldata data) external view returns (uint256) {
+        uint256 extraData = 3668;
+
+        if (myData == 0)
+            revert OffchainLookup(
+                address(this),
+                urls,
+                data,
+                this.MyCallback.selector,
+                abi.encode(address(this), this.MyCallback.selector, extraData)
+            );
+
+        return myData;
     }
 
     function MyCallback(bytes calldata response, bytes calldata extraData)
         external
-        view
         returns (bytes memory)
     {
         (
             address inner,
             bytes4 innerCallbackFunction,
-            bytes memory innerExtraData
-        ) = abi.decode(extraData, (address, bytes4, bytes));
-        return
-            abi.decode(
-                inner.call(
-                    abi.encodeWithSelector(
-                        innerCallbackFunction,
-                        response,
-                        innerExtraData
-                    )
-                ),
-                (bytes)
-            );
+            uint256 innerExtraData
+        ) = abi.decode(extraData, (address, bytes4, uint256));
+
+        myData = abi.decode(response, (uint256));
+        return response;
     }
 }
