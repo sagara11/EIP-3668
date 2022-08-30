@@ -103,12 +103,12 @@ async function durin_call(contractInstance, to, data) {
         "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
       );
       const signerAddress = await signer.getAddress();
-      data = await NameContract.methods
+      const dataTest = await NameContract.methods
         .MyCallback(resultBytes, extraData)
         .send({
           from: signerAddress,
         });
-      console.log("All are done", data);
+      console.log("All are done", dataTest);
     }
   }
   return 3668;
