@@ -17,7 +17,7 @@ app.get("/gateway", (req, res) => {
   signer = provider.getSigner();
 
   // 3. Contract address variable
-  const contractAddress = "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90";
+  const contractAddress = "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0";
 
   // 4. Create contract instance
   const myContract = new ethers.Contract(contractAddress, abi, provider);
@@ -93,13 +93,14 @@ async function durin_call(contractInstance, to, data) {
         );
       }
       const { result } = await httpcall(urls, to, callData);
-      const resultBytes = await parseStringToBytes(result.toString());
+      const abiCoder = new ethers.utils.AbiCoder();
+      const resultBytes = await abiCoder.encode(["uint256"], [result]);
 
       console.log(resultBytes);
 
       const NameContract = new web3.eth.Contract(
         abi,
-        "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90"
+        "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
       );
       const signerAddress = await signer.getAddress();
       data = await NameContract.methods

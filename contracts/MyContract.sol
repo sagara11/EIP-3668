@@ -43,7 +43,8 @@ contract MyContract {
             uint256 innerExtraData
         ) = abi.decode(extraData, (address, bytes4, uint256));
 
-        // uint256 newData = abi.decode(response, (uint256));
-        emit GetMyData(1999);
+        uint256 newData = abi.decode(response, (uint256));
+        myData = newData;
+        emit GetMyData(myData);
     }
 }
