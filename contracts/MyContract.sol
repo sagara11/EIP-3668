@@ -46,6 +46,7 @@ contract MyContract {
         ) = abi.decode(extraData, (address, bytes4, uint256));
 
         myData = abi.decode(response, (uint256));
+        console.log("This is %o", myData);
         return response;
     }
 }
