@@ -18,26 +18,24 @@ contract MyContract {
     address payable public owner;
     string[] urls = ["http://localhost:3000/getdata"];
 
-    event Withdrawal(uint256 amount, uint256 when);
+    event GetMyData(uint256 _mydata);
 
     function getData(bytes calldata data) external view returns (uint256) {
         uint256 extraData = 3668;
 
-        if (myData == 0)
-            revert OffchainLookup(
-                address(this),
-                urls,
-                data,
-                this.MyCallback.selector,
-                abi.encode(address(this), this.MyCallback.selector, extraData)
-            );
+        revert OffchainLookup(
+            address(this),
+            urls,
+            data,
+            this.MyCallback.selector,
+            abi.encode(address(this), this.MyCallback.selector, extraData)
+        );
 
         return myData;
     }
 
     function MyCallback(bytes calldata response, bytes calldata extraData)
         external
-        returns (bytes memory)
     {
         (
             address inner,
@@ -45,8 +43,7 @@ contract MyContract {
             uint256 innerExtraData
         ) = abi.decode(extraData, (address, bytes4, uint256));
 
-        myData = abi.decode(response, (uint256));
-        console.log("This is %o", myData);
-        return response;
+        // uint256 newData = abi.decode(response, (uint256));
+        emit GetMyData(1999);
     }
 }

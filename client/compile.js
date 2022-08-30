@@ -36,17 +36,11 @@ module.exports.abi = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "when",
+        name: "_mydata",
         type: "uint256",
       },
     ],
-    name: "Withdrawal",
+    name: "GetMyData",
     type: "event",
   },
   {
@@ -63,13 +57,7 @@ module.exports.abi = [
       },
     ],
     name: "MyCallback",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },

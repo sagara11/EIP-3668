@@ -1,21 +1,23 @@
 const express = require("express");
 const { ethers } = require("ethers");
+const Web3 = require("web3");
 const axios = require("axios").default;
 const app = express();
 const port = 3000;
 let signer;
 let provider;
 
-app.get("/gateway", (req, res) => {
-  // 1. Import the ABI
-  const { abi } = require("./compile.js");
+const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+// 1. Import the ABI
+const { abi } = require("./compile.js");
 
+app.get("/gateway", (req, res) => {
   // 2. Add the Ethers provider logic here:
   provider = new ethers.providers.JsonRpcProvider();
   signer = provider.getSigner();
 
   // 3. Contract address variable
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const contractAddress = "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90";
 
   // 4. Create contract instance
   const myContract = new ethers.Contract(contractAddress, abi, provider);
@@ -92,22 +94,23 @@ async function durin_call(contractInstance, to, data) {
       }
       const { result } = await httpcall(urls, to, callData);
       const resultBytes = await parseStringToBytes(result.toString());
-      // let ABI = [
-      //   "function MyCallback(bytes calldata response, bytes calldata extraData)",
-      // ];
-      // console.log(resultBytes, extraData);
-      // let iface = new ethers.utils.Interface(ABI);
-      // data = await iface.encodeFunctionData("MyCallback", [
-      //   resultBytes,
-      //   extraData,
-      // ]);
 
-      console.log(await signer.getAddress());
+      console.log(resultBytes);
 
-      await contractInstance.connect(signer).MyCallback(resultBytes, extraData);
+      const NameContract = new web3.eth.Contract(
+        abi,
+        "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90"
+      );
+      const signerAddress = await signer.getAddress();
+      data = await NameContract.methods
+        .MyCallback(resultBytes, extraData)
+        .send({
+          from: signerAddress,
+        });
       console.log("All are done", data);
     }
   }
+  return 3668;
 }
 
 app.get("/getdata", (req, res) => {
