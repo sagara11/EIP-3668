@@ -35,9 +35,9 @@ module.exports.abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
+        internalType: "string",
         name: "_mydata",
-        type: "uint256",
+        type: "string",
       },
     ],
     name: "GetMyData",
@@ -72,9 +72,9 @@ module.exports.abi = [
     name: "getData",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "",
-        type: "uint256",
+        type: "string",
       },
     ],
     stateMutability: "view",
@@ -85,9 +85,9 @@ module.exports.abi = [
     name: "myData",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "string",
         name: "",
-        type: "uint256",
+        type: "string",
       },
     ],
     stateMutability: "view",

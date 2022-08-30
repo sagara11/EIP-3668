@@ -14,13 +14,17 @@ error OffchainLookup(
 );
 
 contract MyContract {
-    uint256 public myData;
+    string public myData;
     address payable public owner;
     string[] urls = ["http://localhost:3000/getdata"];
 
-    event GetMyData(uint256 _mydata);
+    event GetMyData(string _mydata);
 
-    function getData(bytes calldata data) external view returns (uint256) {
+    function getData(bytes calldata data)
+        external
+        view
+        returns (string memory)
+    {
         uint256 extraData = 3668;
 
         revert OffchainLookup(
@@ -43,8 +47,7 @@ contract MyContract {
             uint256 innerExtraData
         ) = abi.decode(extraData, (address, bytes4, uint256));
 
-        uint256 newData = abi.decode(response, (uint256));
-        myData = newData;
-        emit GetMyData(myData);
+        string memory newData = abi.decode(response, (string));
+        emit GetMyData(newData);
     }
 }

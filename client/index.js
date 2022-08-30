@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 let signer;
 let provider;
+let returnData;
 
 const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
 // 1. Import the ABI
@@ -17,7 +18,7 @@ app.get("/gateway", (req, res) => {
   signer = provider.getSigner();
 
   // 3. Contract address variable
-  const contractAddress = "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0";
+  const contractAddress = "0x4C4a2f8c81640e47606d3fd77B353E87Ba015584";
 
   // 4. Create contract instance
   const myContract = new ethers.Contract(contractAddress, abi, provider);
@@ -94,13 +95,13 @@ async function durin_call(contractInstance, to, data) {
       }
       const { result } = await httpcall(urls, to, callData);
       const abiCoder = new ethers.utils.AbiCoder();
-      const resultBytes = await abiCoder.encode(["uint256"], [result]);
+      const resultBytes = await abiCoder.encode(["string"], [result]);
 
       console.log(resultBytes);
 
       const NameContract = new web3.eth.Contract(
         abi,
-        "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
+        "0x4C4a2f8c81640e47606d3fd77B353E87Ba015584"
       );
       const signerAddress = await signer.getAddress();
       const dataTest = await NameContract.methods
@@ -108,14 +109,18 @@ async function durin_call(contractInstance, to, data) {
         .send({
           from: signerAddress,
         });
-      console.log("All are done", dataTest);
+      console.log(
+        "All are done",
+        dataTest.events.GetMyData.returnValues._mydata
+      );
+      returnData = dataTest.events.GetMyData.returnValues._mydata;
     }
   }
-  return 3668;
+  return returnData;
 }
 
 app.get("/getdata", (req, res) => {
-  res.status(200).json({ result: 3668 });
+  res.status(200).json({ result: "bngocleee" });
 });
 
 app.listen(port, () => {
